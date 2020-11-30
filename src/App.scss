@@ -1,0 +1,26 @@
+@media print {
+  body * {
+    visibility: hidden;
+    overflow: hidden;
+  }
+
+  body, .toPrint {
+    margin: 0;
+    box-shadow: none;
+  }
+
+  #section-to-print, #section-to-print * {
+    visibility: visible;
+  }
+
+  #section-to-print {
+    position: absolute;
+    left: 0;
+    top: 0;
+  }
+}
+
+@page {
+  size: A4;
+  margin: 0;
+}
