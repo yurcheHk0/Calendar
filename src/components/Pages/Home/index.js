@@ -1,19 +1,17 @@
-import React, { PureComponent } from "react";
+import React, { useContext } from "react";
 import AppContext from "../../../cammon/store/AppContext";
 
-export class Home extends PureComponent {
-    static contextType = AppContext;
+export default
+function Home() {
+    const {
+        data: { translation }
+    } = useContext( AppContext );
 
-    render() {
-        const { translation } = this.context.data;
-
-        return (
-            <div>
-                {translation['test']}
-                Home Page
-            </div>
-        )
-    }
+    return (
+        <div>
+            {translation['test']}
+            Home Page
+        </div>
+    )
 }
 
-export default Home;

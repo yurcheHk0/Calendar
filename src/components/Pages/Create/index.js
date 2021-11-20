@@ -1,8 +1,9 @@
-import React, { PureComponent } from "react";
+import React, { useState } from "react";
 
 import styles from "./create.module.scss"
 import commonSelect from "../../../cammon/styles/select.module.scss";
 import Button from "../../UI/Button";
+import NotesDividers from "./NotesDivider";
 
 import {
     currentMonth,
@@ -11,31 +12,25 @@ import {
     dateRange,
     getFirstDayInMonth,
 } from "../../../cammon/helpers/date.helper";
-import { monthLong } from "../../../cammon/constants/date.constant";
-import { daysShort } from "../../../cammon/constants/date.constant";
+import { monthLong, daysShort } from "../../../cammon/constants/date.constant";
 
-export class Create extends PureComponent {
-    constructor(props) {
-        super(props);
+export default
+function Create() {
+    const [selectedMonth,  setSelectedMonth] = useState(currentMonth())
+    const [selectedYear,  setSelectedYear] = useState(currentYear())
 
-        this.state = {
-            selectedMont: currentMonth(),
-            selectedYear: currentYear(),
-        };
-
-        this.changeMonth = this.changeMonth.bind(this);
-        this.changeYear = this.changeYear.bind(this);
+    const changeMonth = (event) => {
+        setSelectedMonth(Number.parseInt(event.target.value));
     }
 
-    changeMonth(event) {
-        this.setState({'selectedMont': Number.parseInt(event.target.value)});
+    const changeYear = (event) => {
+        setSelectedYear(Number.parseInt(event.target.value));
     }
 
-    changeYear(event) {
-        this.setState({'selectedYear': Number.parseInt(event.target.value)});
-    }
-
-    prepareTableBody(numberOfDays, firstDayInMonth) {
+    const prepareTableBody = (
+        numberOfDays,
+        firstDayInMonth
+    ) => {
         let result = [];
         let tempArr = [];
         const CHUNK_SIZE = 7;
@@ -72,77 +67,83 @@ export class Create extends PureComponent {
         return result;
     }
 
-    print() {
-        window.print();
-    }
+    const CM = currentMonth();
+    const CY = currentYear();
+    const listOfYears = dateRange(CY - 3, CY + 3, 1);
+    const firstDayInMonth = getFirstDayInMonth(
+        selectedMonth,
+        selectedYear
+    );
+    const tBody = prepareTableBody(
+        getDaysInMonth(selectedMonth, selectedYear),
+        firstDayInMonth
+    );
 
-    drawDivider() {
-        let result = [];
-        const NUMBER_OF_DIVIDERS = 5;
-        Array.from(Array(NUMBER_OF_DIVIDERS)).forEach(() => result.push(
-            <div className={styles.divider} key={'divider-' + Math.random()}/>)
-        );
+    return (
+        <>
+            <div className={styles.filters}>
+                <h2>Settings</h2>
+                <select
+                    className={commonSelect.selectStyle}
+                    defaultValue={CY}
+                    onChange={(event) => changeYear(event)}
+                >
+                    { listOfYears.map(year => <option key={ year } value={ year } >{ year }</option>) }
+                </select>
+                <select
+                    className={commonSelect.selectStyle}
+                    defaultValue={CM}
+                    onChange={(event) => changeMonth(event)}
+                >
+                    { monthLong.map((month, index) => <option key={ month } value={ index } >{ month }</option>) }
+                </select>
+                <Button
+                    txt={'Print'}
+                    color={'primary'}
+                    handleClick={() => window.print()}
+                />
+            </div>
 
-        return result;
-    }
-
-    render() {
-        const CM = currentMonth();
-        const CY = currentYear();
-        const listOfYears = dateRange(CY - 3, CY + 3, 1);
-        const firstDayInMonth = getFirstDayInMonth(this.state.selectedMont, this.state.selectedYear);
-        const tBody = this.prepareTableBody(getDaysInMonth(this.state.selectedMont, this.state.selectedYear), firstDayInMonth);
-
-        return (
-            <React.Fragment>
-                <div className={styles.filters}>
-                    <h2>Settings</h2>
-                    <select className={commonSelect.selectStyle} defaultValue={CY} onChange={this.changeYear}>
-                        { listOfYears.map(year => <option key={ year } value={ year } >{ year }</option>) }
-                    </select>
-                    <select className={commonSelect.selectStyle} defaultValue={CM} onChange={this.changeMonth}>
-                        { monthLong.map((month, index) => <option key={ month } value={ index } >{ month }</option>) }
-                    </select>
-                    <Button txt={'Print'} color={'primary'} handleClick={this.print} />
+            <div
+                id={'section-to-print'}
+                className={`${styles.toPrint} ${styles.A4}`}
+            >
+                <div className={styles.top}>
+                    <h2>
+                        {`${monthLong[selectedMonth]} ${selectedYear}`}
+                    </h2>
                 </div>
-
-                <div id={'section-to-print'} className={`${styles.toPrint} ${styles.A4}`}>
-                    <div className={styles.top}>
-                        <h2>{ `${monthLong[this.state.selectedMont]} ${this.state.selectedYear}` }</h2>
-                    </div>
-                    <table className={styles.table}>
-                        <thead>
-                            <tr>
-                                { daysShort.map(day => <td key={day}>{day}</td>) }
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                tBody.map(tr => {
-                                    return (
-                                        <tr key={'trKey' + tr}>
-                                            {tr[0].map(td => {
-                                                return (
-                                                    <td key={'tdKey' + Math.random()}>
-                                                        <div className={styles.wrapper}>
-                                                            <div className={styles.day}>
-                                                                { td !== 0 ? td : null }
-                                                            </div>
+                <table className={styles.table}>
+                    <thead>
+                        <tr>
+                            { daysShort.map(day => <td key={day}>{day}</td>) }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                            tBody.map(tr => {
+                                return (
+                                    <tr key={'trKey' + tr}>
+                                        {tr[0].map(td => {
+                                            return (
+                                                <td key={'tdKey' + Math.random()}>
+                                                    <div className={styles.wrapper}>
+                                                        <div className={styles.day}>
+                                                            { td !== 0 ? td : null }
                                                         </div>
-                                                    </td>
-                                                )
-                                            })}
-                                        </tr>
-                                    )
-                                })
-                            }
-                        </tbody>
-                    </table>
-                    { this.drawDivider() }
-                </div>
-            </React.Fragment>
-        )
-    }
+                                                    </div>
+                                                </td>
+                                            )
+                                        })}
+                                    </tr>
+                                )
+                            })
+                        }
+                    </tbody>
+                </table>
+                <NotesDividers />
+            </div>
+        </>
+    )
 }
 
-export default Create;

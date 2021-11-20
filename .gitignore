@@ -12,6 +12,7 @@
 /build
 
 # misc
+.vscode
 .DS_Store
 .env.local
 .env.development.local
@@ -21,3 +22,10 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.idea/.gitignore
+.idea/Calendar.iml
+.idea/misc.xml
+.idea/modules.xml
+.idea/vcs.xml
+.idea/codeStyles/codeStyleConfig.xml
+package-lock.json
