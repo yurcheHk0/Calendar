@@ -27,12 +27,14 @@ function Create() {
         setSelectedYear(Number.parseInt(event.target.value));
     }
 
-    const prepareTableBody = (
-        numberOfDays,
-        firstDayInMonth
-    ) => {
+    const prepareTableBody = () => {
         let result = [];
         let tempArr = [];
+        const numberOfDays = getDaysInMonth(selectedMonth, selectedYear);
+        const firstDayInMonth = getFirstDayInMonth(
+            selectedMonth,
+            selectedYear
+        );
         const CHUNK_SIZE = 7;
         const CELLS_COUNT = 35;
         const BEFORE = firstDayInMonth === 0 ? 7 - 1 : firstDayInMonth - 1;
@@ -67,17 +69,9 @@ function Create() {
         return result;
     }
 
-    const CM = currentMonth();
     const CY = currentYear();
     const listOfYears = dateRange(CY - 3, CY + 3, 1);
-    const firstDayInMonth = getFirstDayInMonth(
-        selectedMonth,
-        selectedYear
-    );
-    const tBody = prepareTableBody(
-        getDaysInMonth(selectedMonth, selectedYear),
-        firstDayInMonth
-    );
+    const tBody = prepareTableBody();
 
     return (
         <>
@@ -92,7 +86,7 @@ function Create() {
                 </select>
                 <select
                     className={commonSelect.selectStyle}
-                    defaultValue={CM}
+                    defaultValue={currentMonth()}
                     onChange={(event) => changeMonth(event)}
                 >
                     { monthLong.map((month, index) => <option key={ month } value={ index } >{ month }</option>) }
@@ -141,7 +135,7 @@ function Create() {
                         }
                     </tbody>
                 </table>
-                <NotesDividers />
+                <NotesDividers number={tBody.length > 5 ? 2 : 5} />
             </div>
         </>
     )

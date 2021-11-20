@@ -1,11 +1,17 @@
 import React from "react";
 import styles from "./create.module.scss";
 
-export default
-function NotesDividers() {
-    const NUMBER_OF_DIVIDERS = 5;
+interface NotesDividersProps {
+    number: number
+}
 
-    return [...Array(NUMBER_OF_DIVIDERS)].map(
+export default
+function NotesDividers(
+    {
+        number
+    }: NotesDividersProps)
+{
+    return [...Array(number)].map(
         (
             value,
             index
