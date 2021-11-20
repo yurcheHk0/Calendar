@@ -17,7 +17,7 @@ class Store extends Component {
 
         this.state = {
             isSidebarOpen: false,
-            translation: langMap['en'],
+            translation: langMap[localStorage.getItem('lang') || 'en'],
         }
     }
 
@@ -52,4 +52,5 @@ class Store extends Component {
         );
     }
 }
+
 export default Store;

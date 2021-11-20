@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, } from "react";
 
 import styles from './header.module.scss';
 import commonSelect from "../../cammon/styles/select.module.scss";
@@ -10,9 +10,14 @@ export default
 function Header () {
 
     const { methods } = useContext(AppContext);
+    const supportedLanguages = ['en', 'ua'];
 
     const changeLang = (event) => {
-        methods.changeLanguage(event.target.value)
+        const { value } = event.target;
+
+        methods.changeLanguage(value);
+
+        localStorage.setItem('lang', value || "en");
     }
 
     return (
@@ -35,13 +40,16 @@ function Header () {
             <select
                 className={`${styles.lang} ${commonSelect.selectStyle}`}
                 onChange={changeLang}
+                defaultValue={localStorage.getItem('lang') || 'en'}
             >
-                <option value={'en'}>
-                    EN
-                </option>
-                <option value={'ua'}>
-                    UA
-                </option>
+                {supportedLanguages.map(language => {
+                    return <option
+                        value={language}
+                        key={language}
+                    >
+                        {language.toUpperCase()}
+                    </option>
+                })}
             </select>
         </header>
     );

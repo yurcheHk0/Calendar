@@ -10,7 +10,6 @@ function Home() {
     return (
         <div>
             {translation['test']}
-            Home Page
         </div>
     )
 }

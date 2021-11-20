@@ -7,9 +7,7 @@ import styles from "./sidebar.module.scss";
 export default
 function SidebarMenu() {
     const {
-        // @ts-ignore
-        data: { isSidebarOpen },
-        // @ts-ignore
+        data: { isSidebarOpen, translation },
         methods
     } = useContext(AppContext);
 
@@ -28,7 +26,7 @@ function SidebarMenu() {
                             to="/"
                             onClick={methods.toggleSidebar}
                         >
-                            Home
+                            {translation['Home'] || 'Home'}
                         </Link>
                     </li>
                     <li>
@@ -36,7 +34,7 @@ function SidebarMenu() {
                             to="/create"
                             onClick={methods.toggleSidebar}
                         >
-                            Create
+                            {translation['Create'] || 'Create'}
                         </Link>
                     </li>
                     <li>
@@ -44,7 +42,7 @@ function SidebarMenu() {
                             to="/info"
                             onClick={methods.toggleSidebar}
                         >
-                            Info
+                            {translation['Info'] || 'Info'}
                         </Link>
                     </li>
                 </ul>
